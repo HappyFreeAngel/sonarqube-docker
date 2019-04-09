@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo "PID of this script: $$"
+echo "PPID of this script: $PPID"
+echo "UID of this script: $UID"
+pwd
+
+current_shell_file_path=$(cd "$(dirname "$0")"; pwd)
+
+cd ${current_shell_file_path}
+pwd  && ls -a
+# 提示镜像是否已经存在,如果已经存在，则提示，然后退出。
+oldVersionImageName=$(docker images | grep  commonDockerStarter | grep $1 | awk '{print $3 }')
+echo $oldVersionImageName
+
+if [ ! -n $oldVersionImageName ]; then
+    echo ${oldVersionImageName} $1
+    exit -1
+fi
+pwd
+
+
+ls
+if [ $# -eq 0 ]; then
+    echo $0: 用法：$0  版本号
+    exit 1
+fi
+
+if [[ ! -n "$1" ]]; then 
+     echo "检测到程序的第一个参数是空值。请输入正确格式: $0 版本号"
+     exit 1
+fi
+
+#sonarqube:lts-alpine-zh
+sudo docker build -t sonarqube:$1  .  --no-cache=true
