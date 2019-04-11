@@ -32,4 +32,4 @@ if [[ ! -n "$1" ]]; then
 fi
 
 #sonarqube:lts-alpine-zh
-sudo docker build -t sonarqube:$1  .  --no-cache=true
+sudo docker build -t ascs/sonarqube:$1  .  --no-cache=true
