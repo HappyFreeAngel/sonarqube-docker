@@ -1,0 +1,67 @@
+{
+  "id": "/devops/tools/sonarqube",
+  "cmd": null,
+  "cpus": 2,
+  "mem": 2048,
+  "disk": 0,
+  "instances": 1,
+  "acceptedResourceRoles": [
+    "*"
+  ],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "forcePullImage": false,
+      "image": "ascs/sonarqube:7.7-community-zh-with-plugins",
+      "parameters": [
+        {
+          "key": "dns",
+          "value": "10.2.1.31"
+        }
+      ],
+      "privileged": true
+    },
+    "volumes": [],
+    "portMappings": [
+      {
+        "containerPort": 0,
+        "labels": {},
+        "protocol": "tcp",
+        "servicePort": 10004
+      }
+    ]
+  },
+  "env": {
+    "sonar.jdbc.username": "postgres",
+    "sonar.jdbc.password": "your_password",
+    "TZ": "Asia/Shanghai",
+    "sonar.jdbc.url": "jdbc:postgresql://postgres.tools.devops.marathon.mesos:5432/sonarqube",
+    "SERVER_PORT": "9000"
+  },
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "maxConsecutiveFailures": 3,
+      "port": 9000,
+      "protocol": "TCP",
+      "ipProtocol": "IPv4",
+      "timeoutSeconds": 20,
+      "delaySeconds": 15
+    }
+  ],
+  "labels": {
+    "org.projectcalico.label.role": "frontend"
+  },
+  "networks": [
+    {
+      "name": "frontend",
+      "mode": "container"
+    }
+  ],
+  "portDefinitions": [],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 0,
+    "minimumHealthCapacity": 0.5
+  }
+}

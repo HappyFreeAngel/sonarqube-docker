@@ -1,0 +1,93 @@
+{
+  "id": "/devops/tools/postgres",
+  "cmd": null,
+  "cpus": 0.5,
+  "mem": 512,
+  "disk": 10240,
+  "instances": 1,
+  "constraints": [
+    [
+      "rack_id",
+      "CLUSTER",
+      "rack-2"
+    ]
+  ],
+  "acceptedResourceRoles": [
+    "*"
+  ],
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "forcePullImage": false,
+      "image": "postgres:9.6.12-alpine",
+      "parameters": [
+        {
+          "key": "expose",
+          "value": "5432"
+        }
+      ],
+      "privileged": true
+    },
+    "volumes": [
+      {
+        "containerPath": "/var/lib/postgresql/data",
+        "hostPath": "sonarqube-data1",
+        "mode": "RW"
+      },
+      {
+        "containerPath": "sonarqube-data1",
+        "persistent": {
+          "type": "root",
+          "size": 10240,
+          "constraints": []
+        },
+        "mode": "RW"
+      }
+    ],
+    "portMappings": [
+      {
+        "containerPort": 0,
+        "labels": {},
+        "protocol": "tcp",
+        "servicePort": 10002
+      }
+    ]
+  },
+  "env": {
+    "POSTGRES_USER": "postgres",
+    "POSTGRES_PASSWORD": "your_password",
+    "POSTGRES_DB": "sonarqube",
+    "PGDATA": "/var/lib/postgresql/data"
+  },
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "maxConsecutiveFailures": 3,
+      "port": 5432,
+      "protocol": "MESOS_TCP",
+      "ipProtocol": "IPv4",
+      "timeoutSeconds": 20,
+      "delaySeconds": 15
+    }
+  ],
+  "labels": {
+    "org.projectcalico.label.role": "database"
+  },
+  "networks": [
+    {
+      "name": "database",
+      "mode": "container"
+    }
+  ],
+  "portDefinitions": [],
+  "args": [
+    "postgres",
+    "-c",
+    "max_connections=200"
+  ],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 0,
+    "minimumHealthCapacity": 0.5
+  }
+}
