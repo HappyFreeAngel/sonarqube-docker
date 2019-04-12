@@ -6,3 +6,8 @@ ithub各个版本下载地址：https://github.com/SonarQubeCommunity/sonar-l10n
 下载之后放到sonar安装目录/extensions/plugins
 
 
+关于使用方法请参考
+
+https://blog.csdn.net/happyfreeangel/article/details/89228945
+
+
